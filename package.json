@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "tsx": "^4.21.0",
-    "wrangler": "^4.67.0"
+    "wrangler": "^4.71.0"
   }
 }
