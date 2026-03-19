@@ -29,10 +29,58 @@ const { Content } = await render(post)
     <article class="content">
       <Content />
     </article>
+    <div class="image-lightbox" hidden aria-hidden="true">
+      <img alt="" />
+    </div>
     <hr />
     <Bio />
   </div>
 </BaseLayout>
+
+<script>
+  const contentImages = Array.from(document.querySelectorAll('.content img'));
+  const lightbox = document.querySelector('.image-lightbox');
+  const lightboxImage = lightbox?.querySelector('img');
+
+  if (lightbox && lightboxImage && contentImages.length > 0) {
+    const closeLightbox = () => {
+      lightbox.hidden = true;
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('lightbox-open');
+      lightboxImage.removeAttribute('src');
+      lightboxImage.alt = '';
+    };
+
+    closeLightbox();
+
+    const openLightbox = (image) => {
+      lightboxImage.src = image.currentSrc || image.src;
+      lightboxImage.alt = image.alt || '';
+      lightbox.hidden = false;
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('lightbox-open');
+    };
+
+    contentImages.forEach((image) => {
+      image.classList.add('zoomable-image');
+      image.addEventListener('click', () => {
+        if (!lightbox.hidden && lightboxImage.src === (image.currentSrc || image.src)) {
+          closeLightbox();
+          return;
+        }
+
+        openLightbox(image);
+      });
+    });
+
+    lightbox.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !lightbox.hidden) {
+        closeLightbox();
+      }
+    });
+  }
+</script>
 
 <style>
   .post-container {
@@ -57,5 +105,38 @@ const { Content } = await render(post)
   header hr {
     min-width: 100px;
     width: 30%;
+  }
+
+  :global(body.lightbox-open) {
+    overflow: hidden;
+  }
+
+  :global(.content img.zoomable-image) {
+    cursor: zoom-in;
+  }
+
+  .image-lightbox[hidden] {
+    display: none;
+  }
+
+  .image-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: color-mix(in srgb, black 82%, transparent);
+    cursor: zoom-out;
+  }
+
+  .image-lightbox img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.35);
   }
 </style>
