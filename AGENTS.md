@@ -23,3 +23,7 @@ Write the post body here.
 
 - Keep the filename aligned with the slug when possible, e.g. `src/data/blog-posts/your-post-slug.md`.
 - If a post has local images/assets, place them in a sibling folder under `src/data/blog-posts/` named after the post slug.
+
+## Writing style
+
+refer to `./WRITING_GUIDE.md` for writing style when writing a blog post.
