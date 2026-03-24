@@ -1,0 +1,30 @@
+name: Blog post request
+description: Draft a blog post from an idea or issue summary.
+title: "[blog] <short title>"
+labels:
+  - blog
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: The working title for the post.
+      placeholder: A short, descriptive title
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What the post should cover.
+      placeholder: Describe the topic, angle, and any must-include details.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Sources and context
+      description: Links, notes, screenshots, or background material.
+      placeholder: Add any links or reference material here.
+    validations:
+      required: false

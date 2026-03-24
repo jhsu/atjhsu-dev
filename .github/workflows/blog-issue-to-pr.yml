@@ -1,0 +1,31 @@
+name: Blog issue to PR
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    if: github.event.issue.user.type != 'Bot'
+    steps:
+      - name: Send issue to Cloudflare Worker
+        env:
+          WORKER_URL: ${{ secrets.BLOG_AGENT_WORKER_URL }}
+          WORKER_TOKEN: ${{ secrets.BLOG_AGENT_WORKER_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          REPO: ${{ github.repository }}
+        run: |
+          curl -fsS -X POST "$WORKER_URL" \
+            -H "Authorization: Bearer $WORKER_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n \
+              --arg repo \"$REPO\" \
+              --argjson number \"$ISSUE_NUMBER\" \
+              --arg title \"$ISSUE_TITLE\" \
+              --arg body \"$ISSUE_BODY\" \
+              --arg url \"$ISSUE_URL\" \
+              '{repo:$repo, issue:{number:$number, title:$title, body:$body, url:$url}}')"
