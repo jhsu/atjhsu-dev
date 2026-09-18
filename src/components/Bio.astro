@@ -1,28 +1,59 @@
-<div>
-  <img src="/assets/profile.png" alt="Headshot of Joe">
-  <p>
-    Hi, I'm <strong>Joe</strong>. I'm a Software Engineer based in New York, NY.
-    You can follow me on <a href="https://www.twitter.com/jhsu" target="_blank">Twitter</a>,
-    see some of my work on <a href="https://www.github.com/jhsu" target="_blank">GitHub</a>,
-    or read more about me on <a href="https://atjhsu.dev" target="_blank">my website</a>, which you are currently on.
-  </p>
-</div>
+<aside aria-label="About the author">
+  <img src="/assets/profile.png" alt="Joe Hsu" width="100" height="100" />
+  <div>
+    <p class="bio-name">Joe Hsu</p>
+    <p>
+      I’m a software engineer in New York. I write about building with AI agents and the systems around the work.
+      <a href="/about">More about me <span aria-hidden="true">→</span></a>
+    </p>
+  </div>
+</aside>
 
 <style>
-  div {
+  aside {
     align-items: center;
-    display: flex;
+    border-top: 1px solid var(--surface-border);
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: 3.5rem minmax(0, 1fr);
+    margin: 0 auto;
+    margin-top: 3rem;
+    max-width: var(--reading-width);
+    padding-top: 2rem;
   }
 
   img {
-    width: 100px;
-    height: 100px;
-    border-radius: 100px;
-    display: block;
-    margin-right: 20px;
+    background: var(--surface-muted);
+    border-radius: 50%;
+    filter: saturate(0.85);
+    height: 3.5rem;
+    object-fit: cover;
+    width: 3.5rem;
+  }
+
+  .bio-name {
+    color: var(--text-main);
+    font-family: var(--font-family-serif);
+    font-weight: 700;
+    margin-bottom: 0.2rem;
   }
 
   p {
-    font-size: 1.125rem;
+    color: var(--text-secondary);
+    font-family: var(--font-family-sans);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  a {
+    color: var(--text-main);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--text-main) 30%, transparent);
+  }
+
+  a:hover {
+    color: var(--accent-color);
+    text-decoration-color: currentColor;
   }
 </style>

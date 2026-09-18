@@ -21,6 +21,9 @@ const socialUrl = new URL(`/open-graph/${routeKey}.png`, Astro.site ?? Astro.url
 <meta name="viewport" content="width=device-width" />
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
+<!-- Feeds -->
+<link rel="alternate" type="application/rss+xml" title="Joe Hsu" href="/rss.xml" />
+
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />

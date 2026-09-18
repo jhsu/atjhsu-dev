@@ -1,53 +1,170 @@
 ---
 import { getCollection } from 'astro:content'
+import readingTime from 'reading-time'
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const title = 'Blog';
-const description = 'Latest articles.';
+const title = 'Writing — Joe Hsu';
+const description = 'Field notes on software, AI agents, and the systems around the work.';
 const permalink = `${Astro.site.href}blog`;
 
-let allPosts = await getCollection('posts')
-allPosts = allPosts.sort((a, b) => new Date(b.data.publishDate).valueOf() - new Date(a.data.publishDate).valueOf());
+const posts = (await getCollection('posts'))
+  .sort((a, b) => new Date(b.data.publishDate).valueOf() - new Date(a.data.publishDate).valueOf());
+
+const toISO = (date) => new Date(date).toISOString();
+const readTime = (post) => readingTime(post.body ?? '').text;
+const shortDate = (date) => String(date).replace(/\s*\d{4}$/, '');
+
+const years = [];
+for (const post of posts) {
+  const year = new Date(post.data.publishDate).getFullYear();
+  let group = years.find((entry) => entry.year === year);
+  if (!group) {
+    group = { year, posts: [] };
+    years.push(group);
+  }
+  group.posts.push(post);
+}
 ---
 
 <BaseLayout title={title} description={description} permalink={permalink} current="blog">
-  <div class="container">
-    <h1>Blog</h1>
-    {allPosts.map((post, index) => {
-      const href = `/blog/${post.data.slug}`;
-      return (
-        <div>
-          { index !== 0 && <hr /> }
-          <div class="post-item">
-            <h2>
-              <a href={href}>{post.data.title}</a>
-            </h2>
-            <p>{post.data.description}</p>
-            <div class="post-item-footer">
-              <span class="post-item-date">— {post.data.publishDate}</span>
-            </div>
-          </div>
-        </div>
-      )
-    })}
-  </div>
+  <header class="archive-header">
+    <p class="eyebrow">Archive</p>
+    <h1>Writing</h1>
+    <p class="archive-intro">
+      Field notes on software, AI agents, and the systems around the work.
+      <span class="count">{posts.length} posts and counting.</span>
+    </p>
+  </header>
+
+  {years.map((group) => (
+    <section class="year" aria-labelledby={`year-${group.year}`}>
+      <h2 class="year-label" id={`year-${group.year}`}>{group.year}</h2>
+      <ol class="post-list" role="list">
+        {group.posts.map((post) => (
+          <li>
+            <article>
+              <p class="post-meta">
+                <time datetime={toISO(post.data.publishDate)}>{shortDate(post.data.publishDate)}</time>
+                <span class="dot" aria-hidden="true">·</span>
+                <span>{readTime(post)}</span>
+              </p>
+              <h3><a href={`/blog/${post.data.slug}`}>{post.data.title}</a></h3>
+              <p class="post-description">{post.data.description}</p>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
 </BaseLayout>
 
 <style>
-  h2,
-  .post-item-footer {
-    font-family: var(--font-family-sans);
-    font-weight: 700;
+  .archive-header {
+    border-bottom: 1px solid var(--surface-border);
+    padding-bottom: 1.75rem;
   }
 
-  .post-item-date {
+  .archive-header h1 {
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    margin-top: 0.4rem;
+  }
+
+  .archive-intro {
     color: var(--text-secondary);
-    text-align: left;
-    text-transform: uppercase;
-    margin-right: 16px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-top: 0.85rem;
+    max-width: 52ch;
   }
 
-  hr {
-    margin: 60px auto;
+  .archive-intro .count {
+    color: var(--text-tertiary);
+    display: block;
+    font-family: var(--font-family-sans);
+    font-size: 0.78rem;
+    margin-top: 0.5rem;
+  }
+
+  .year {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
+  }
+
+  .year-label {
+    color: var(--text-tertiary);
+    font-family: var(--font-family-sans);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding-top: 1.4rem;
+  }
+
+  .post-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .post-list li {
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  .post-list li:first-child {
+    border-top: 1px solid var(--surface-border);
+  }
+
+  .post-list article {
+    padding: 1.5rem 0;
+  }
+
+  .post-meta {
+    color: var(--text-tertiary);
+    font-family: var(--font-family-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
+
+  .post-meta .dot {
+    color: var(--accent-color);
+    padding: 0 0.4rem;
+  }
+
+  .post-list h3 {
+    font-size: clamp(1.3rem, 2.8vw, 1.6rem);
+    line-height: 1.25;
+    margin-top: 0.5rem;
+  }
+
+  .post-list h3 a {
+    text-decoration: none;
+  }
+
+  .post-list h3 a:hover {
+    color: var(--accent-color);
+  }
+
+  .post-description {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.65;
+    margin-top: 0.5rem;
+    max-width: 56ch;
+  }
+
+  @media (max-width: 560px) {
+    .year {
+      gap: 0.6rem;
+      grid-template-columns: 1fr;
+    }
+
+    .year-label {
+      padding-top: 1rem;
+    }
+
+    .post-list li:first-child {
+      border-top: 0;
+    }
   }
 </style>

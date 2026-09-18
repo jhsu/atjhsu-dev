@@ -10,17 +10,17 @@ const staticPages = [
   {
     route: 'home',
     title: 'Joe Hsu',
-    description: 'Posts on software engineering, product, and building at GetWhys.',
+    description: 'Notes on building software with AI — what works, what doesn\'t, and the systems around the work.',
   },
   {
     route: 'about',
-    title: 'About',
-    description: 'About Joe Hsu, software engineer at GetWhys.',
+    title: 'About Joe Hsu',
+    description: 'Software engineer in New York writing about building with AI agents.',
   },
   {
     route: 'blog',
-    title: 'Blog',
-    description: 'Latest articles.',
+    title: 'Writing',
+    description: 'Field notes on software, AI agents, and the systems around the work.',
   },
 ];
 
@@ -80,24 +80,24 @@ async function generateImage(page) {
       size: [104, 104],
     },
     bgGradient: [
-      [242, 241, 238],
-      [214, 202, 176],
+      [247, 243, 234],
+      [235, 229, 215],
     ],
     border: {
-      color: [138, 106, 66],
+      color: [169, 85, 43],
       width: 14,
       side: 'block-end',
     },
     padding: 68,
     font: {
       title: {
-        color: [35, 34, 32],
+        color: [35, 32, 26],
         size: 82,
         lineHeight: 1.02,
         weight: 'Bold',
       },
       description: {
-        color: [102, 100, 94],
+        color: [92, 86, 75],
         size: 31,
         lineHeight: 1.25,
       },

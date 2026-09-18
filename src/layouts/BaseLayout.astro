@@ -32,19 +32,15 @@ const { title, description, permalink, current } = Astro.props;
   .layout {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
-    min-height: 100vh;
+    isolation: isolate;
+    min-height: 100dvh;
   }
 
   main {
     flex: 1;
-    position: relative;
     margin: 0 auto;
-    max-width: 1400px;
-    padding: 1em 2em;
-    box-sizing: border-box;
+    max-width: var(--page-width);
+    padding: clamp(2.5rem, 5vw, 4rem) 1.5rem 0;
     width: 100%;
-    display: flex;
-    flex-direction: column;
   }
 </style>
